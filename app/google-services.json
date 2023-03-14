@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "29472199204",
+    "firebase_url": "https://lbs-animal-adopt-app-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "lbs-animal-adopt-app",
+    "storage_bucket": "lbs-animal-adopt-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:29472199204:android:9d588f2dee14cf2d44beb1",
+        "android_client_info": {
+          "package_name": "com.raon.android.raonapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "29472199204-am36u9o3fdtgd89l4nq05m678l11q3l9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.raon.android.raonapp",
+            "certificate_hash": "0a6ddc1827cdb8398d646ed859684ff056690668"
+          }
+        },
+        {
+          "client_id": "29472199204-rgdgfobs8gcleft7uels8o6b23cl9l5p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAqmnkcRclWXGNOxoW17CDZS0nkq89y1oY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "29472199204-rgdgfobs8gcleft7uels8o6b23cl9l5p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
