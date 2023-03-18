@@ -9,43 +9,51 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.raon.android.raonapp.R;
+import com.raon.android.raonapp.domain.BoardAdopt;
+
 import java.text.NumberFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.List;
 
 public class BoardAdoptAdapter extends RecyclerView.Adapter<BoardAdoptAdapter.ViewHolder> {
-    private final String TAG = MemberManageAdapter.class.getSimpleName();
-    private ArrayList<> memberList;
-    private NumberFormat nf = NumberFormat.getInstance();
-    private MemberManageViewModel.MemberClickListener listener;
-    public BoardAdoptAdapter(MemberManageViewModel.MemberClickListener addPointListener){
-        this.listener = addPointListener;
-    }
+    private final String TAG = BoardAdoptAdapter.class.getSimpleName();
+    private List<BoardAdopt> boardAdoptList;
 
-    public void setMemberList(ArrayList<Member> memberList) {
-        this.memberList = memberList;
+    public BoardAdoptAdapter(){}
+
+    public void setBoardAdoptList(List<BoardAdopt> boardAdoptList) {
+        this.boardAdoptList = boardAdoptList;
         notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView txtName, txtPhoneNumber;
-        private ImageView imgProfile;
+        private TextView txtVariety, txtSex, txtCreateAt, txtLocation, txtRescueLocation;
+        private ImageView imgAnimal;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            txtName = itemView.findViewById(R.id.txt_name);
-            txtPhoneNumber = itemView.findViewById(R.id.txt_phone_number);
-            imgProfile = itemView.findViewById(R.id.img_profile);
+            txtVariety = itemView.findViewById(R.id.txt_variety);
+            txtSex = itemView.findViewById(R.id.txt_sex);
+            txtCreateAt = itemView.findViewById(R.id.txt_create_at);
+            txtLocation = itemView.findViewById(R.id.txt_location);
+            txtRescueLocation = itemView.findViewById(R.id.txt_rescue_location);
+            imgAnimal = itemView.findViewById(R.id.img_animal);
         }
 
-        public void onBind(Member member) {
-            String name = member.getName();
-            String cellPhoneNumber = member.getCellPhoneNumber();
-            //이미지는 추가 개발 예정
-
-            txtName.setText(name);
-            txtPhoneNumber.setText(cellPhoneNumber);
-
-            itemView.setOnClickListener(view -> listener.onClick(member));
+        public void onBind(BoardAdopt boardAdopt) {
+            txtVariety.setText(boardAdopt.getVariety());
+            txtSex.setText(boardAdopt.getSex());
+            LocalDate date =
+                    Instant.ofEpochMilli(boardAdopt.getCreateAt()).atZone(ZoneId.systemDefault()).toLocalDate();
+            txtCreateAt.setText(date.toString());
+            txtLocation.setText(boardAdopt.getLocation());
+            txtRescueLocation.setText(boardAdopt.getRescueSite());
+            Glide.with(itemView).load(boardAdopt.getImagePath()).into(imgAnimal);
         }
 
     }
@@ -53,18 +61,22 @@ public class BoardAdoptAdapter extends RecyclerView.Adapter<BoardAdoptAdapter.Vi
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_member_manage, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_board_adopt, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.onBind(this.memberList.get(position));
+        holder.onBind(this.boardAdoptList.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return memberList == null ? 0 : memberList.size();
+        return boardAdoptList == null ? 0 : boardAdoptList.size();
+    }
+
+    public void clearList(){
+        boardAdoptList = new ArrayList<>();
     }
 
 }
