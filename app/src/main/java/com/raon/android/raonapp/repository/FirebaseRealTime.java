@@ -2,20 +2,17 @@ package com.raon.android.raonapp.repository;
 
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.raon.android.raonapp.callback.GetBoardAdoptCountListener;
 import com.raon.android.raonapp.callback.GetBoardAdoptListListener;
+import com.raon.android.raonapp.callback.GetReviewAdoptListener;
 
 public class FirebaseRealTime {
     private static FirebaseRealTime instance;
     private final String BOARD_ADOPT_PATH = "board_adopt";
     private final String BOARD_TEMPORARY_PROTECT_PATH = "board_temporary_protect";
+    private final String REVIEW_ADOPT = "review_adopt";
     private FirebaseDatabase database;
     private FirebaseRealTime() {
         database = FirebaseDatabase.getInstance();
@@ -75,4 +72,17 @@ public class FirebaseRealTime {
             }
         });
     }
+
+    public void getReviewAdopt(GetReviewAdoptListener reviewAdoptListener){
+        DatabaseReference mRef = database.getReference();
+        mRef.child(REVIEW_ADOPT).orderByChild("createAt").get().addOnCompleteListener(task -> {
+            if(task.isSuccessful()){
+                Log.d("firebase", String.valueOf(task.getResult().getValue()));
+                reviewAdoptListener.onSuccess(task.getResult());
+            }else{
+                Log.e("firebase", "Error getting data", task.getException());
+            }
+        });
+    }
 }
+

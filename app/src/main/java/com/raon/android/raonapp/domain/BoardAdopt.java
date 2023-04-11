@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
 
 public class BoardAdopt {
     private String id;
@@ -16,6 +18,22 @@ public class BoardAdopt {
     private String sex;
     private String variety;
     private String writer;
+    private HashMap<String, Comment> comments;
+
+    public BoardAdopt() {}
+
+    public BoardAdopt(String id, long createAt, String imagePath, double lat, String location, double lon, String rescueSite, String sex, String variety, String writer) {
+        this.id = id;
+        this.createAt = createAt;
+        this.imagePath = imagePath;
+        this.lat = lat;
+        this.location = location;
+        this.lon = lon;
+        this.rescueSite = rescueSite;
+        this.sex = sex;
+        this.variety = variety;
+        this.writer = writer;
+    }
 
     public String getId() {
         return id;
@@ -95,6 +113,14 @@ public class BoardAdopt {
 
     public void setWriter(String writer) {
         this.writer = writer;
+    }
+
+    public HashMap<String, Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(HashMap<String, Comment> comments) {
+        this.comments = comments;
     }
 
     @NonNull

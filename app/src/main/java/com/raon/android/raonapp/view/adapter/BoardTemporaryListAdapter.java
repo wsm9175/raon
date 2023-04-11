@@ -3,27 +3,22 @@ package com.raon.android.raonapp.view.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.raon.android.raonapp.R;
-import com.raon.android.raonapp.domain.BoardAdopt;
 import com.raon.android.raonapp.domain.BoardTemporaryProtect;
+import com.raon.android.raonapp.view.findtemporary.ItemClickListener;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
 public class BoardTemporaryListAdapter extends RecyclerView.Adapter<BoardTemporaryListAdapter.ViewHolder> {
     private final String TAG = BoardTemporaryListAdapter.class.getSimpleName();
     private List<BoardTemporaryProtect> boardAdoptList;
-
+    private ItemClickListener itemClickListener;
     public BoardTemporaryListAdapter(){}
 
     public void setBoardAdoptList(List<BoardTemporaryProtect> boardAdoptList) {
@@ -31,29 +26,23 @@ public class BoardTemporaryListAdapter extends RecyclerView.Adapter<BoardTempora
         notifyDataSetChanged();
     }
 
+    public BoardTemporaryListAdapter(ItemClickListener itemClickListener) {
+        this.itemClickListener = itemClickListener;
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView txtVariety, txtSex, txtCreateAt, txtRescueLocation, txtEtc;
-        private ImageView imgAnimal;
+        private TextView txtName, txtLocation;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            txtVariety = itemView.findViewById(R.id.txt_variety);
-            txtSex = itemView.findViewById(R.id.txt_sex);
-            txtCreateAt = itemView.findViewById(R.id.txt_create_at);
-            txtRescueLocation = itemView.findViewById(R.id.txt_rescue_location);
-            imgAnimal = itemView.findViewById(R.id.img_animal);
-            txtEtc = itemView.findViewById(R.id.txt_etc);
+            txtName = itemView.findViewById(R.id.name);
+            txtLocation = itemView.findViewById(R.id.location);
         }
 
         public void onBind(BoardTemporaryProtect boardAdopt) {
-            txtVariety.setText(boardAdopt.getVariety());
-            txtSex.setText(boardAdopt.getSex());
-            LocalDate date =
-                    Instant.ofEpochMilli(boardAdopt.getCreateAt()).atZone(ZoneId.systemDefault()).toLocalDate();
-            txtCreateAt.setText(date.toString());
-            txtEtc.setText(boardAdopt.getEtc());
-            txtRescueLocation.setText(boardAdopt.getRescueSite());
-            Glide.with(itemView).load(boardAdopt.getImagePath()).into(imgAnimal);
+            txtName.setText(boardAdopt.getName());
+            txtLocation.setText(boardAdopt.getLocation());
+            itemView.setOnClickListener(view -> itemClickListener.onClick(boardAdopt));
         }
 
     }

@@ -2,6 +2,7 @@ package com.raon.android.raonapp.view.findtemporary;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
@@ -21,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.raon.android.raonapp.databinding.FragmentFindTemporaryBinding;
+import com.raon.android.raonapp.domain.BoardTemporaryProtect;
 import com.raon.android.raonapp.view.adapter.BoardTemporaryListAdapter;
 import com.raon.android.raonapp.view.adapter.RecyclerViewDecoration;
 
@@ -40,10 +42,12 @@ public class FindTemporaryFragment extends Fragment {
         Log.d(TAG, "onCreateView");
         binding = FragmentFindTemporaryBinding.inflate(inflater);
         viewModel = new ViewModelProvider(this).get(FindTemporaryFragmentViewModel.class);
-        boardAdoptAdapter = new BoardTemporaryListAdapter();
+        boardAdoptAdapter = new BoardTemporaryListAdapter(getItemClickListener());
+
         binding.recyclerviewBoard.setAdapter(boardAdoptAdapter);
-        binding.recyclerviewBoard.setLayoutManager(new GridLayoutManager(getContext(), 2));
-        binding.recyclerviewBoard.addItemDecoration(new RecyclerViewDecoration(15));
+        //binding.recyclerviewBoard.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        binding.recyclerviewBoard.setLayoutManager(new LinearLayoutManager(getContext()));
+        //binding.recyclerviewBoard.addItemDecoration(new RecyclerViewDecoration());
 
         binding.btnMyLocation.setOnClickListener(view -> {
             checkPermission();
@@ -129,9 +133,18 @@ public class FindTemporaryFragment extends Fragment {
             }
         };
     }
+
+    public ItemClickListener getItemClickListener(){
+        return boardTemporaryProtect -> {
+            Intent intent = new Intent(getActivity(), FindTemporaryDetailActivity.class);
+            intent.putExtra("data", boardTemporaryProtect);
+            startActivity(intent);
+        };
+    }
 }
 
 interface GetLocationListener{
     public void onSuccess(double lat, double lon);
     public void onFailed();
 }
+

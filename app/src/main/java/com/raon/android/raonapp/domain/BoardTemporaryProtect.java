@@ -1,17 +1,25 @@
 package com.raon.android.raonapp.domain;
 
-public class BoardTemporaryProtect {
+import java.io.Serializable;
+
+public class BoardTemporaryProtect implements Serializable {
     private String id;
     private long createAt;
-    private String imagePath;
     private double lat;
     private String location;
     private double lon;
-    private String rescueSite;
-    private String sex;
-    private String variety;
-    private String writer;
-    private String etc;
+    private String name;
+
+    public BoardTemporaryProtect() {}
+
+    public BoardTemporaryProtect(String id, long createAt, double lat, String location, double lon, String name) {
+        this.id = id;
+        this.createAt = createAt;
+        this.lat = lat;
+        this.location = location;
+        this.lon = lon;
+        this.name = name;
+    }
 
     public String getId() {
         return id;
@@ -27,14 +35,6 @@ public class BoardTemporaryProtect {
 
     public void setCreateAt(long createAt) {
         this.createAt = createAt;
-    }
-
-    public String getImagePath() {
-        return imagePath;
-    }
-
-    public void setImagePath(String imagePath) {
-        this.imagePath = imagePath;
     }
 
     public double getLat() {
@@ -61,44 +61,12 @@ public class BoardTemporaryProtect {
         this.lon = lon;
     }
 
-    public String getRescueSite() {
-        return rescueSite;
+    public String getName() {
+        return name;
     }
 
-    public void setRescueSite(String rescueSite) {
-        this.rescueSite = rescueSite;
-    }
-
-    public String getSex() {
-        return sex;
-    }
-
-    public void setSex(String sex) {
-        this.sex = sex;
-    }
-
-    public String getVariety() {
-        return variety;
-    }
-
-    public void setVariety(String variety) {
-        this.variety = variety;
-    }
-
-    public String getWriter() {
-        return writer;
-    }
-
-    public void setWriter(String writer) {
-        this.writer = writer;
-    }
-
-    public String getEtc() {
-        return etc;
-    }
-
-    public void setEtc(String etc) {
-        this.etc = etc;
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
@@ -106,15 +74,10 @@ public class BoardTemporaryProtect {
         return "BoardTemporaryProtect{" +
                 "id='" + id + '\'' +
                 ", createAt=" + createAt +
-                ", imagePath='" + imagePath + '\'' +
                 ", lat=" + lat +
                 ", location='" + location + '\'' +
                 ", lon=" + lon +
-                ", rescueSite='" + rescueSite + '\'' +
-                ", sex='" + sex + '\'' +
-                ", variety='" + variety + '\'' +
-                ", writer='" + writer + '\'' +
-                ", etc='" + etc + '\'' +
+                ", name='" + name + '\'' +
                 '}';
     }
 }
