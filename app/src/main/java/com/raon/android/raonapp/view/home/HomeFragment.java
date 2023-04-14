@@ -1,5 +1,6 @@
 package com.raon.android.raonapp.view.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -21,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.raon.android.raonapp.R;
+import com.raon.android.raonapp.callback.BoardClickListener;
 import com.raon.android.raonapp.databinding.FragmentHomeBinding;
 import com.raon.android.raonapp.domain.BoardAdopt;
 import com.raon.android.raonapp.view.adapter.BoardAdoptAdapter;
@@ -47,7 +49,7 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         binding = FragmentHomeBinding.inflate(inflater);
         viewModel = new ViewModelProvider(this).get(HomeFragmentViewModel.class);
-        boardAdoptAdapter = new BoardAdoptAdapter();
+        boardAdoptAdapter = new BoardAdoptAdapter(getBoardClickListener());
         binding.recyclerviewBoard.setAdapter(boardAdoptAdapter);
         binding.recyclerviewBoard.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.recyclerviewBoard.addItemDecoration(new RecyclerViewDecoration(15));
@@ -99,5 +101,13 @@ public class HomeFragment extends Fragment {
         page = upSize;
         binding.progressBar.setVisibility(View.VISIBLE);
         viewModel.getBoardCount();
+    }
+
+    public BoardClickListener getBoardClickListener(){
+        return boardAdopt -> {
+            Intent intent = new Intent(getContext(), BoardAdoptActivity.class);
+            intent.putExtra("data", boardAdopt);
+            startActivity(intent);
+        };
     }
 }

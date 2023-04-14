@@ -1,5 +1,7 @@
 package com.raon.android.raonapp.view.findtemporary;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +11,8 @@ import android.location.LocationManager;
 import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -23,8 +27,10 @@ import android.widget.Toast;
 
 import com.raon.android.raonapp.databinding.FragmentFindTemporaryBinding;
 import com.raon.android.raonapp.domain.BoardTemporaryProtect;
+import com.raon.android.raonapp.geocoder.GeocoderModule;
 import com.raon.android.raonapp.view.adapter.BoardTemporaryListAdapter;
 import com.raon.android.raonapp.view.adapter.RecyclerViewDecoration;
+import com.raon.android.raonapp.view.addressweb.WebViewActivity;
 
 import java.util.ArrayList;
 
@@ -34,6 +40,17 @@ public class FindTemporaryFragment extends Fragment {
     private FindTemporaryFragmentViewModel viewModel;
     private LocationManager locationManager;
     private BoardTemporaryListAdapter boardAdoptAdapter;
+    private ActivityResultLauncher<Intent> getResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        if(result.getResultCode() == RESULT_OK){
+            Intent intent = result.getData();
+            Bundle bundle = intent.getExtras();
+            String address = bundle.getString("data");
+            Log.d(TAG, address);
+
+            Location location = GeocoderModule.getLocation(address);
+            getBoardByLocation(location.getLatitude(), location.getLongitude());
+        }
+    });
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -41,13 +58,12 @@ public class FindTemporaryFragment extends Fragment {
         Log.d(TAG, "onCreateView");
         Log.d(TAG, "onCreateView");
         binding = FragmentFindTemporaryBinding.inflate(inflater);
+        binding.setFragment(this);
         viewModel = new ViewModelProvider(this).get(FindTemporaryFragmentViewModel.class);
         boardAdoptAdapter = new BoardTemporaryListAdapter(getItemClickListener());
 
         binding.recyclerviewBoard.setAdapter(boardAdoptAdapter);
-        //binding.recyclerviewBoard.setLayoutManager(new GridLayoutManager(getContext(), 2));
         binding.recyclerviewBoard.setLayoutManager(new LinearLayoutManager(getContext()));
-        //binding.recyclerviewBoard.addItemDecoration(new RecyclerViewDecoration());
 
         binding.btnMyLocation.setOnClickListener(view -> {
             checkPermission();
@@ -116,15 +132,16 @@ public class FindTemporaryFragment extends Fragment {
         else getLocationListener.onFailed();
     }
 
+    public void moveMap(){
+        Intent intent = new Intent(getContext(), WebViewActivity.class);
+        getResult.launch(intent);
+    }
+
     public GetLocationListener getLocationListener(){
         return new GetLocationListener() {
             @Override
             public void onSuccess(double lat, double lon) {
-                binding.linearBoard.setVisibility(View.VISIBLE);
-                binding.constraintSelectMode.setVisibility(View.INVISIBLE);
-                viewModel.setLat(lat);
-                viewModel.setLon(lon);
-                viewModel.getBoardAdoptList();
+                getBoardByLocation(lat, lon);
             }
 
             @Override
@@ -140,6 +157,14 @@ public class FindTemporaryFragment extends Fragment {
             intent.putExtra("data", boardTemporaryProtect);
             startActivity(intent);
         };
+    }
+
+    private void getBoardByLocation(double lat, double lon){
+        binding.linearBoard.setVisibility(View.VISIBLE);
+        binding.constraintSelectMode.setVisibility(View.INVISIBLE);
+        viewModel.setLat(lat);
+        viewModel.setLon(lon);
+        viewModel.getBoardAdoptList();
     }
 }
 

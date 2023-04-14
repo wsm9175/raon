@@ -11,7 +11,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.raon.android.raonapp.R;
+import com.raon.android.raonapp.callback.BoardClickListener;
 import com.raon.android.raonapp.domain.BoardAdopt;
+import com.raon.android.raonapp.view.home.HomeFragment;
 
 import java.text.NumberFormat;
 import java.time.Instant;
@@ -23,8 +25,11 @@ import java.util.List;
 public class BoardAdoptAdapter extends RecyclerView.Adapter<BoardAdoptAdapter.ViewHolder> {
     private final String TAG = BoardAdoptAdapter.class.getSimpleName();
     private List<BoardAdopt> boardAdoptList;
+    public BoardClickListener boardClickListener;
 
-    public BoardAdoptAdapter(){}
+    public BoardAdoptAdapter(BoardClickListener boardClickListener){
+        this.boardClickListener = boardClickListener;
+    }
 
     public void setBoardAdoptList(List<BoardAdopt> boardAdoptList) {
         this.boardAdoptList = boardAdoptList;
@@ -54,6 +59,8 @@ public class BoardAdoptAdapter extends RecyclerView.Adapter<BoardAdoptAdapter.Vi
             txtLocation.setText(boardAdopt.getLocation());
             txtRescueLocation.setText(boardAdopt.getRescueSite());
             Glide.with(itemView).load(boardAdopt.getImagePath()).into(imgAnimal);
+
+            itemView.setOnClickListener(view -> boardClickListener.onClick(boardAdopt));
         }
 
     }

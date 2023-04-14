@@ -2,12 +2,13 @@ package com.raon.android.raonapp.domain;
 
 import androidx.annotation.NonNull;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 
-public class BoardAdopt {
+public class BoardAdopt implements Serializable {
     private String id;
     private long createAt;
     private String imagePath;

@@ -3,6 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="8dp">
+    <data>
+        <variable
+            name="fragment"
+            type="com.raon.android.raonapp.view.findtemporary.FindTemporaryFragment" />
+    </data>
     <FrameLayout
         android:id="@+id/framelayout"
         android:layout_width="match_parent"
@@ -33,6 +38,7 @@
                 android:layout_height="wrap_content"
                 android:backgroundTint="@android:color/holo_blue_bright"
                 android:text="지정 위치 중심으로 찾기"
+                android:onClick="@{()->fragment.moveMap()}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

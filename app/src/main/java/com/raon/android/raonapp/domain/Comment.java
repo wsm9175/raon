@@ -1,6 +1,7 @@
 package com.raon.android.raonapp.domain;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 
 public class Comment implements Serializable {
@@ -12,11 +13,11 @@ public class Comment implements Serializable {
     private String writerId;
     private String writerName;
 
-    private List<Comment> comments;
+    private HashMap<String, Comment> comments;
 
     public Comment(){}
 
-    public Comment(String id, String commentGroup, String content, long createAt, boolean root, String writerId, String writerName, List<Comment> comments) {
+    public Comment(String id, String commentGroup, String content, long createAt, boolean root, String writerId, String writerName, HashMap<String, Comment> comments) {
         this.id = id;
         this.commentGroup = commentGroup;
         this.content = content;
@@ -27,14 +28,13 @@ public class Comment implements Serializable {
         this.comments = comments;
     }
 
-    public List<Comment> getComments() {
+    public HashMap<String, Comment> getComments() {
         return comments;
     }
 
-    public void setComments(List<Comment> comments) {
+    public void setComments(HashMap<String, Comment> comments) {
         this.comments = comments;
     }
-
 
     public String getId() {
         return id;

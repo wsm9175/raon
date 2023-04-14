@@ -1,14 +1,20 @@
 package com.raon.android.raonapp.view.findadopt;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContract;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.app.ActivityCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
@@ -24,10 +30,14 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.raon.android.raonapp.R;
+import com.raon.android.raonapp.callback.BoardClickListener;
 import com.raon.android.raonapp.databinding.FragmentFindAdoptBinding;
 import com.raon.android.raonapp.domain.BoardAdopt;
+import com.raon.android.raonapp.geocoder.GeocoderModule;
 import com.raon.android.raonapp.view.adapter.BoardAdoptAdapter;
 import com.raon.android.raonapp.view.adapter.RecyclerViewDecoration;
+import com.raon.android.raonapp.view.addressweb.WebViewActivity;
+import com.raon.android.raonapp.view.home.BoardAdoptActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +48,17 @@ public class FindAdoptFragment extends Fragment {
     private FindAdoptFragmentViewModel viewModel;
     private LocationManager locationManager;
     private BoardAdoptAdapter boardAdoptAdapter;
+    private ActivityResultLauncher<Intent> getResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),result -> {
+        if(result.getResultCode() == RESULT_OK){
+            Intent intent = result.getData();
+            Bundle bundle = intent.getExtras();
+            String address = bundle.getString("data");
+            Log.d(TAG, address);
+
+            Location location = GeocoderModule.getLocation(address);
+            getBoardByLocation(location.getLatitude(), location.getLongitude());
+        }
+    });
 
     @SuppressLint("ServiceCast")
     @Override
@@ -46,8 +67,9 @@ public class FindAdoptFragment extends Fragment {
         // Inflate the layout for this fragment
         Log.d(TAG, "onCreateView");
         binding = FragmentFindAdoptBinding.inflate(inflater);
+        binding.setFragment(this);
         viewModel = new ViewModelProvider(this).get(FindAdoptFragmentViewModel.class);
-        boardAdoptAdapter = new BoardAdoptAdapter();
+        boardAdoptAdapter = new BoardAdoptAdapter(getBoardClickListener());
         binding.recyclerviewBoard.setAdapter(boardAdoptAdapter);
         binding.recyclerviewBoard.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.recyclerviewBoard.addItemDecoration(new RecyclerViewDecoration(15));
@@ -118,15 +140,16 @@ public class FindAdoptFragment extends Fragment {
         else getLocationListener.onFailed();
     }
 
+    public void moveMap(){
+        Intent intent = new Intent(getContext(), WebViewActivity.class);
+        getResult.launch(intent);
+    }
+
     public GetLocationListener getLocationListener(){
         return new GetLocationListener() {
             @Override
             public void onSuccess(double lat, double lon) {
-                binding.linearBoard.setVisibility(View.VISIBLE);
-                binding.constraintSelectMode.setVisibility(View.INVISIBLE);
-                viewModel.setLat(lat);
-                viewModel.setLon(lon);
-                viewModel.getBoardAdoptList();
+                getBoardByLocation(lat, lon);
             }
 
             @Override
@@ -135,6 +158,23 @@ public class FindAdoptFragment extends Fragment {
             }
         };
     }
+
+    public BoardClickListener getBoardClickListener(){
+        return boardAdopt -> {
+            Intent intent = new Intent(getContext(), BoardAdoptActivity.class);
+            intent.putExtra("data", boardAdopt);
+            startActivity(intent);
+        };
+    }
+
+    private void getBoardByLocation(double lat, double lon){
+        binding.linearBoard.setVisibility(View.VISIBLE);
+        binding.constraintSelectMode.setVisibility(View.INVISIBLE);
+        viewModel.setLat(lat);
+        viewModel.setLon(lon);
+        viewModel.getBoardAdoptList();
+    }
+
 }
 
 interface GetLocationListener{
